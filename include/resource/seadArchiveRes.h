@@ -65,8 +65,6 @@ public:
         return readDirectoryImpl_(handle, entries, num);
     }
 
-    bool isExistFile(const SafeString& path) const { return isExistFileImpl_(path); }
-
 protected:
     virtual const void* getFileImpl_(const SafeString& file_path,
                                      FileInfo* file_info = nullptr) const = 0;
@@ -77,7 +75,6 @@ protected:
     virtual bool closeDirectoryImpl_(HandleBuffer* handle) const = 0;
     virtual u32 readDirectoryImpl_(HandleBuffer* handle, DirectoryEntry* entries,
                                    u32 num) const = 0;
-    virtual bool isExistFileImpl_(const SafeString& path) const;
     virtual bool prepareArchive_(const void* archive) = 0;
 
     bool mEnable;
