@@ -115,7 +115,7 @@ protected:
         return reinterpret_cast<Heap*>(mPreviousHeap) != reinterpret_cast<Heap*>(1);
     }
 
-    uintptr_t mPreviousHeap;
+    uintptr_t mPreviousHeap = 0;
 };
 
 class FindContainHeapCache
