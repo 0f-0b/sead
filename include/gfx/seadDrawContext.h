@@ -2,7 +2,7 @@
 
 #include <nn/gfx/gfx_CommandBuffer.h>
 #include <nn/gfx/gfx_Types.h>
-#include "basis/seadTypes.h"
+#include <nvn/nvn.h>
 #include "prim/seadRuntimeTypeInfo.h"
 
 namespace sead
@@ -15,6 +15,11 @@ public:
     virtual ~DrawContext();
 
     nn::gfx::CommandBuffer* getCommandBuffer() { return &mCommandBuffer; }
+
+    NVNcommandBuffer* getNvnCommandBuffer() const
+    {
+        return mCommandBuffer.ToData()->pNvnCommandBuffer;
+    }
 
 private:
     nn::gfx::CommandBuffer mCommandBuffer;

@@ -170,6 +170,8 @@ protected:
         });
     }
 
+    void sort(CompareCallbackImpl cmp);
+
     template <typename T, typename Compare>
     void heapSort_(Compare cmp)
     {
@@ -186,30 +188,7 @@ protected:
     s32 compare(const PtrArrayImpl& other, CompareCallbackImpl cmp) const;
     void uniq(CompareCallbackImpl cmp);
 
-    s32 binarySearch(const void* ptr, CompareCallbackImpl cmp) const
-    {
-        if (mPtrNum == 0)
-            return -1;
-
-        s32 a = 0;
-        s32 b = mPtrNum - 1;
-        while (a < b)
-        {
-            const s32 m = (a + b) / 2;
-            const s32 c = cmp(mPtrs[m], ptr);
-            if (c == 0)
-                return m;
-            if (c < 0)
-                a = m + 1;
-            else
-                b = m;
-        }
-
-        if (cmp(mPtrs[a], ptr) == 0)
-            return a;
-
-        return -1;
-    }
+    s32 binarySearch(const void* ptr, CompareCallbackImpl cmp) const;
 
     s32 mPtrNum = 0;
     s32 mPtrNumMax = 0;
@@ -251,9 +230,17 @@ public:
     using CompareCallback = s32 (*)(const T*, const T*);
 
     void sort() { sort(compareT); }
-    void sort(CompareCallback cmp) { PtrArrayImpl::sort_<T>(cmp); }
+    void sort(CompareCallback cmp)
+    {
+        // FIXME this function pointer cast results in UB
+        PtrArrayImpl::sort(reinterpret_cast<CompareCallbackImpl>(cmp));
+    }
     void heapSort() { heapSort(compareT); }
-    void heapSort(CompareCallback cmp) { PtrArrayImpl::heapSort_<T>(cmp); }
+    void heapSort(CompareCallback cmp)
+    {
+        // FIXME this function pointer cast results in UB
+        PtrArrayImpl::heapSort(reinterpret_cast<CompareCallbackImpl>(cmp));
+    }
 
     bool equal(const PtrArray& other, CompareCallback cmp) const
     {
@@ -280,7 +267,8 @@ public:
     s32 binarySearch(const T* ptr) const { return PtrArrayImpl::binarySearch(ptr, compareT); }
     s32 binarySearch(const T* ptr, CompareCallback cmp) const
     {
-        return PtrArrayImpl::binarySearch(ptr, cmp);
+        // FIXME this function pointer cast results in UB
+        return PtrArrayImpl::binarySearch(ptr, reinterpret_cast<CompareCallbackImpl>(cmp));
     }
 
     bool operator==(const PtrArray& other) const { return equal(other, compareT); }

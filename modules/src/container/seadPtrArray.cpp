@@ -150,6 +150,29 @@ bool PtrArrayImpl::checkInsert(s32 pos, s32 num)
 
 // TODO: PtrArrayImpl::uniq
 
-// TODO: PtrArrayImpl::binarySearch
+s32 PtrArrayImpl::binarySearch(const void* ptr, CompareCallbackImpl cmp) const
+{
+    if (mPtrNum == 0)
+        return -1;
+
+    s32 a = 0;
+    s32 b = mPtrNum - 1;
+    while (a < b)
+    {
+        const s32 m = (a + b) / 2;
+        const s32 c = cmp(mPtrs[m], ptr);
+        if (c == 0)
+            return m;
+        if (c < 0)
+            a = m + 1;
+        else
+            b = m;
+    }
+
+    if (cmp(mPtrs[a], ptr) == 0)
+        return a;
+
+    return -1;
+}
 
 }  // namespace sead
