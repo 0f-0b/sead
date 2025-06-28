@@ -311,16 +311,4 @@ SharcArchiveRes::HandleInner* SharcArchiveRes::getHandleInner_(HandleBuffer* han
         return new (handle) HandleInner;
     return reinterpret_cast<HandleInner*>(handle);
 }
-
-bool SharcArchiveRes::isExistFileImpl_(const SafeString& path) const
-{
-    const u32 hash = calcHash32(path, Endian::toHostU32(mEndianType, mFATBlockHeader->hash_key));
-    const u32 size = mFATEntrys.size();
-#ifdef NNSDK
-    const s32 id = binarySearch_(hash, mFATEntrys.getBufferPtr(), 0, size, mEndianType);
-#else
-    const s32 id = binarySearch_(hash, mFATEntrys.getBufferPtr(), 0, size);
-#endif
-    return id != -1;
-}
 }  // namespace sead
