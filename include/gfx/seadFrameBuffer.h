@@ -89,4 +89,11 @@ public:
     void bind(DrawContext* draw_context) const;
 };
 
+class DisplayBuffer
+{
+    SEAD_RTTI_BASE(DisplayBuffer)
+
+    // TODO
+};
+
 }  // namespace sead
