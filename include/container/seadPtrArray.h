@@ -173,15 +173,11 @@ protected:
 
     void sort(CompareCallbackImpl cmp);
 
-    template <typename T, typename Compare>
-    void heapSort_(Compare cmp)
+    template <typename T>
+    void heapSort(s32 (*cmpT)(const T* a, const T* b))
     {
-        // Note: Nintendo did not use <algorithm>
-        const auto less_cmp = [&](const void* a, const void* b) {
-            return cmp(static_cast<const T*>(a), static_cast<const T*>(b)) < 0;
-        };
-        std::make_heap(mPtrs, mPtrs + size(), less_cmp);
-        std::sort_heap(mPtrs, mPtrs + size(), less_cmp);
+        auto cmpVoid = reinterpret_cast<s32 (*)(const void*, const void*)>(cmpT);
+        heapSort(cmpVoid);
     }
 
     void heapSort(CompareCallbackImpl cmp);
@@ -189,30 +185,7 @@ protected:
     s32 compare(const PtrArrayImpl& other, CompareCallbackImpl cmp) const;
     void uniq(CompareCallbackImpl cmp);
 
-    s32 binarySearch(const void* ptr, CompareCallbackImpl cmp) const
-    {
-        if (mPtrNum == 0)
-            return -1;
-
-        s32 a = 0;
-        s32 b = mPtrNum - 1;
-        while (a < b)
-        {
-            const s32 m = (a + b) / 2;
-            const s32 c = cmp(mPtrs[m], ptr);
-            if (c == 0)
-                return m;
-            if (c < 0)
-                a = m + 1;
-            else
-                b = m;
-        }
-
-        if (cmp(mPtrs[a], ptr) == 0)
-            return a;
-
-        return -1;
-    }
+    s32 binarySearch(const void* ptr, CompareCallbackImpl cmp) const;
 
     s32 mPtrNum = 0;
     s32 mPtrNumMax = 0;
@@ -256,7 +229,7 @@ public:
     void sort() { sort(compareT); }
     void sort(CompareCallback cmp) { PtrArrayImpl::sort<T>(cmp); }
     void heapSort() { heapSort(compareT); }
-    void heapSort(CompareCallback cmp) { PtrArrayImpl::heapSort_<T>(cmp); }
+    void heapSort(CompareCallback cmp) { PtrArrayImpl::heapSort<T>(cmp); }
 
     bool equal(const PtrArray& other, CompareCallback cmp) const
     {
@@ -283,7 +256,8 @@ public:
     s32 binarySearch(const T* ptr) const { return PtrArrayImpl::binarySearch(ptr, compareT); }
     s32 binarySearch(const T* ptr, CompareCallback cmp) const
     {
-        return PtrArrayImpl::binarySearch(ptr, cmp);
+        // FIXME this function pointer cast results in UB
+        return PtrArrayImpl::binarySearch(ptr, reinterpret_cast<CompareCallbackImpl>(cmp));
     }
 
     bool operator==(const PtrArray& other) const { return equal(other, compareT); }
