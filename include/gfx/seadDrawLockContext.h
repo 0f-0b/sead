@@ -5,6 +5,7 @@
 
 namespace sead
 {
+
 class DrawLockContext : public hostio::Node
 {
 public:
@@ -16,8 +17,11 @@ public:
     void genMessage(hostio::Context* context);
 
 private:
-    [[maybe_unused]] u32 _8 = 0;
+    u32 _8 = 0;
     CriticalSection mCriticalSection{};
+    void* _padding[0x2];
 };
+
+static_assert(sizeof(DrawLockContext) == 0x60);
 
 }  // namespace sead

@@ -648,7 +648,7 @@ u32 MathCalcCommon<f32>::atanIdx_(f32 t)
     return cAtanTbl[index].atan_val + (u32)(cAtanTbl[index].atan_delta * rest);
 }
 
-f32 ldexp(f32 x, s32 exp)
+static f32 ldexp(f32 x, s32 exp)
 {
     u32 result2 = (sead::BitUtil::bitCast<u32>(x) + (exp << 23)) & 0x7FFFFFFF;
     return sead::BitUtil::bitCast<f32>(result2);
@@ -665,26 +665,23 @@ f32 MathCalcCommon<f32>::expTable(f32 x)
     return ldexp(result, v1);
 }
 
-f32 frexp(f32 x, s32* exp)
+static f32 frexp(f32 value, s32* exp)
 {
-    u32 v2 = sead::BitUtil::bitCast<u32>(x);
-    *exp = (v2 >> 23) & 0xFF;
-    v2 = (v2 & 0x7FFFFF) | 0x3F800000;
-    return sead::BitUtil::bitCast<f32>(v2);
+    u32 bits = BitUtil::bitCast<u32>(value);
+    *exp = static_cast<s32>((bits >> 23) & 0xff) - 127;
+    return BitUtil::bitCast<f32>((bits & 0x7fffff) | 0x3f800000);
 }
 
-// NON_MATCHING: regswap (https://decomp.me/scratch/9YZfd)
 template <>
 f32 MathCalcCommon<f32>::logTable(f32 x)
 {
     s32 exp;
-    f32 t = frexp(x, &exp) - 1.0f;
-    t *= 256;
-    u32 index = (s32)t;
-    f32 findex = index;
-    f32 more = (exp - 127);
-    f32 rest = t - findex;
-    return cLogTbl[index].log_val + (cLogTbl[index].log_delta * rest) + (more * ln2());
+    f32 frac = frexp(x, &exp);
+    f32 more = exp;
+    f32 t = (frac - 1) * 256;
+    u32 index = static_cast<s32>(t);
+    f32 rest = t - index;
+    return cLogTbl[index].log_val + rest * cLogTbl[index].log_delta + more * ln2();
 }
 
 template s64 MathCalcCommon<s64>::gcd(s64 x, s64 y);
