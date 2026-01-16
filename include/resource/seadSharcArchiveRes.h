@@ -64,7 +64,6 @@ public:
     bool openDirectoryImpl_(HandleBuffer* handle, const SafeString& path) const override;
     bool closeDirectoryImpl_(HandleBuffer* handle) const override;
     u32 readDirectoryImpl_(HandleBuffer* handle, DirectoryEntry* entry, u32 num) const override;
-    bool isExistFileImpl_(const SafeString& path) const override;
     bool prepareArchive_(const void* archive) override;
 
 protected:
