@@ -98,20 +98,29 @@ add_library(sead OBJECT
   modules/src/framework/seadTaskMgr.cpp
 
   include/gfx/nvn/seadDebugFontMgrNvn.h
+  include/gfx/nvn/seadFrameBufferNvn.h
+  include/gfx/nvn/seadGraphicsNvn.h
   include/gfx/seadCamera.h
   include/gfx/seadColor.h
   include/gfx/seadDrawContext.h
   include/gfx/seadDrawLockContext.h
   include/gfx/seadFrameBuffer.h
+  include/gfx/seadGraphics.h
+  include/gfx/seadGraphicsContextMRT.h
   include/gfx/seadPrimitiveRenderer.h
   include/gfx/seadPrimitiveRendererUtil.h
   include/gfx/seadProjection.h
   include/gfx/seadTexture.h
   modules/src/gfx/nvn/seadDebugFontMgrNvn.cpp
+  modules/src/gfx/nvn/seadFrameBufferNvn.cpp
+  modules/src/gfx/nvn/seadGraphicsNvn.cpp
   modules/src/gfx/seadCamera.cpp
   modules/src/gfx/seadColor.cpp
+  modules/src/gfx/seadDrawContext.cpp
   modules/src/gfx/seadDrawLockContext.cpp
   modules/src/gfx/seadFrameBuffer.cpp
+  modules/src/gfx/seadGraphics.cpp
+  modules/src/gfx/seadGraphicsContextMRT.cpp
   # modules/src/gfx/seadPrimitiveRenderer.cpp
   # modules/src/gfx/seadPrimitiveRendererUtil.cpp
   modules/src/gfx/seadProjection.cpp
