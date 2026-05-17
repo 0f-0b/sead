@@ -68,15 +68,15 @@ HeapSafeStringBase<char16>::operator=(const SafeStringBase<char16>& other)
 template <>
 void BufferedSafeStringBase<char>::assureTerminationImpl_() const
 {
-    auto* mutableSafeString = const_cast<BufferedSafeStringBase<char>*>(this);
-    mutableSafeString->getMutableStringTop_()[mBufferSize - 1] = cNullChar;
+    char* mutableTop = const_cast<BufferedSafeStringBase<char>*>(this)->getMutableStringTop_();
+    mutableTop[mBufferSize - 1] = cNullChar;
 }
 
 template <>
 void BufferedSafeStringBase<char16>::assureTerminationImpl_() const
 {
-    auto* mutableSafeString = const_cast<BufferedSafeStringBase<char16>*>(this);
-    mutableSafeString->getMutableStringTop_()[mBufferSize - 1] = cNullChar;
+    char16* mutableTop = const_cast<BufferedSafeStringBase<char16>*>(this)->getMutableStringTop_();
+    mutableTop[mBufferSize - 1] = cNullChar;
 }
 
 template <>

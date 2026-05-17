@@ -1,7 +1,7 @@
 #include "gfx/nvn/seadDebugFontMgrNvn.h"
 #include "filedevice/seadFileDevice.h"
 #include "filedevice/seadFileDeviceMgr.h"
-#include "gfx/nin/seadGraphicsNvn.h"
+#include "gfx/nvn/seadGraphicsNvn.h"
 #include "gfx/seadGraphics.h"
 #include "nn/os.h"
 #include "nvn/nvn.h"

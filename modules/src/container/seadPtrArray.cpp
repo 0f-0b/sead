@@ -149,12 +149,44 @@ void PtrArrayImpl::sort(CompareCallbackImpl cmp)
     std::sort(mPtrs, mPtrs + size(), [&](const void* a, const void* b) { return cmp(a, b) < 0; });
 }
 
+void PtrArrayImpl::heapSort(CompareCallbackImpl cmp)
+{
+    // Note: Nintendo did not use <algorithm>
+    std::make_heap(mPtrs, mPtrs + size(),
+                   [&](const void* a, const void* b) { return cmp(a, b) < 0; });
+    std::sort_heap(mPtrs, mPtrs + size(),
+                   [&](const void* a, const void* b) { return cmp(a, b) < 0; });
+}
+
 // TODO: PtrArrayImpl::heapSort
 
 // TODO: PtrArrayImpl::compare
 
 // TODO: PtrArrayImpl::uniq
 
-// TODO: PtrArrayImpl::binarySearch
+s32 PtrArrayImpl::binarySearch(const void* ptr, CompareCallbackImpl cmp) const
+{
+    if (mPtrNum == 0)
+        return -1;
+
+    s32 a = 0;
+    s32 b = mPtrNum - 1;
+    while (a < b)
+    {
+        const s32 m = (a + b) / 2;
+        const s32 c = cmp(mPtrs[m], ptr);
+        if (c == 0)
+            return m;
+        if (c < 0)
+            a = m + 1;
+        else
+            b = m;
+    }
+
+    if (cmp(mPtrs[a], ptr) == 0)
+        return a;
+
+    return -1;
+}
 
 }  // namespace sead
